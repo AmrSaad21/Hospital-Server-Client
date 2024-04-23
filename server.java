@@ -13,9 +13,8 @@ public class server {
     public static final int CANCEL_PORT = 6667;
 	public static final int MAKE_PORT = 6666;
     public static void main(String[] args) throws IOException {
-        hos = new Hospital("C:/Users/Amr Saad/Desktop/req6/req6/hospital.txt");;
+        hos = new Hospital("C:/Users/Amr Saad/Desktop/req6/req6/hospital.txt");
         System.out.println("The server started .. ");
-        
 
         /*  make thread  */ 
         new Thread() {
@@ -26,7 +25,6 @@ public class server {
                         new Clients(ss.accept()).start();
                     }
                 }
-                
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -62,16 +60,12 @@ private static class Clients extends Thread {
             BufferedReader in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
             PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
             String patientName = in.readLine();
+
             while (true) {
 
                 String clientData = in.readLine(); // Read appointment details
 
                 String[] dataParts = clientData.split(",");
-
-                if (dataParts.length != 2) {
-                    out.println("Invalid input format");
-                    continue;
-                }
 
                 try {
                     int doctorId = Integer.parseInt(dataParts[0]);
@@ -91,11 +85,15 @@ private static class Clients extends Thread {
                                 out.println("the doctor is already busy at this timeslot");
                             }
                         } else {
-                            boolean check = hos.cancelAppointment(doctorId, timeslotIndex, patientName);
-                            if (check) {
+
+                            int check = hos.cancelAppointment(doctorId, timeslotIndex, patientName);
+                            if (check==1) {
                                 out.println("canceling the appointment is done successfully");
-                            } else {
+                            } else if(check==3){
+
                                 out.println("the doctor has an appointment to a different patient name at this timeslot");
+                            }else if(check==2){
+                                out.println("the doctor doesn’t have an appointment at this timeslot");
                             }
                         }
                     }

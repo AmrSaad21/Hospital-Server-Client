@@ -29,16 +29,25 @@ public class client {
 
         BufferedReader socketMakeReader = new BufferedReader(new InputStreamReader(makeAppointmentSocket.getInputStream()));
         BufferedReader socketCancelReader = new BufferedReader(new InputStreamReader(cancelAppointmentSocket.getInputStream()));
+
         makeAppointmentWriter.println(patientName);
         cancelAppointmentWriter.println(patientName);
         while(true){
 
             System.out.println("you need to cancel(1) or appointment(2): ");
             int cancel_or_make=userInput.nextInt();
+
+            if(cancel_or_make!=1&&cancel_or_make!=2){
+                 System.out.println("Please enter concel or appointment ");
+                 continue;
+            }
+
             System.out.println("Inter the doctor ID: ");
             int doctorId=userInput.nextInt();
+
             System.out.println("Inter the timeslot index: ");
             int timeslotIndex=userInput.nextInt();
+
             if(cancel_or_make==1){
                 cancelAppointmentWriter.println(doctorId+","+timeslotIndex);
                 System.out.println(socketCancelReader.readLine());
@@ -47,6 +56,7 @@ public class client {
                 makeAppointmentWriter.println(doctorId+","+timeslotIndex);
                 System.out.println(socketMakeReader.readLine());
             }
+
         }
     }
 }
